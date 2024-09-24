@@ -164,7 +164,7 @@ if __name__ == "__main__":
 
     # load base_directory list
     dirs = com.select_dirs(param=param, mode=mode)
-
+    print("param:", param)
     # loop of the base directory
     for idx, target_dir in enumerate(dirs):
         print("\n===========================")

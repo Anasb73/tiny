@@ -1,7 +1,7 @@
-dev_directory : ./dev_data
-eval_directory : ./eval_data
-model_directory: ./model
-result_directory: ./result
+dev_directory : /work1/gitlab-runner-docker-data/datasets/dcase2020_task2_baseline/dev_data
+eval_directory : /work1/gitlab-runner-docker-data/datasets/dcase2020_task2_baseline/eval_data
+model_directory: /work1/gitlab-runner-docker-data/models/anomaly_detection/model
+result_directory: /work1/gitlab-runner-docker-data/models/anomaly_detection/result
 result_file: result.csv
 
 max_fpr : 0.1

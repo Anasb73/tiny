@@ -51,7 +51,7 @@ if __name__ == "__main__":
 
     # load base directory
     dirs = com.select_dirs(param=param, mode=mode)
-
+    print("param:", param)
     # initialize lines in csv for AUC and pAUC
     csv_lines = []
 
