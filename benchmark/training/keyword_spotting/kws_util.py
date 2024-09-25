@@ -147,7 +147,7 @@ def parse_command():
       type=str,
       #default=None,
       #default="/work1/gitlab-runner-docker-data/models/keyword_spotting/trained_models/kws_model.h5",
-      default="/work1/gitlab-runner-docker-data/models/keyword_spotting/trained_models/kws_ref_model",
+      default="/work1/gitlab-runner-docker-data/models/kws_ref_model",
       help='Path to load pretrained model for evaluation or starting point for training')
   parser.add_argument(
       '--tfl_file_name',
