@@ -122,7 +122,7 @@ def parse_command():
       '--bin_file_path',
       type=str,
       #default=os.path.join(os.getenv('HOME'), 'kws_test_files'),
-      default=os.path.join('/work1/gitlab-runner-docker-data/models/keyword_spotting', 'kws_test_files'),
+      default=os.path.join('/work1/gitlab-runner-docker-data/models/keyword_spotting', 'kws_qat_test_files'),
       help="""\
       Directory where plots of binary test files for benchmark runner are written.
       """)
@@ -140,12 +140,13 @@ def parse_command():
       '--saved_model_path',
       type=str,
       #default='trained_models/kws_model.h5',
-      default='/work1/gitlab-runner-docker-data/models/keyword_spotting/trained_models/kws_model.h5',
+      default='/work1/gitlab-runner-docker-data/models/keyword_spotting/trained_models/kws_model_quantized.h5',
       help='In quantize.py, path to load pretrained model from; in train.py, destination for trained model')
   parser.add_argument(
       '--model_init_path',
       type=str,
-      default=None,
+      #default=None,
+      default="/work1/gitlab-runner-docker-data/models/keyword_spotting/trained_models/kws_model.h5",
       help='Path to load pretrained model for evaluation or starting point for training')
   parser.add_argument(
       '--tfl_file_name',
@@ -165,7 +166,7 @@ def parse_command():
       '--plot_dir',
       type=str,
       #default='./plots',
-      default='/work1/gitlab-runner-docker-data/models/keyword_spotting/plots',
+      default='/work1/gitlab-runner-docker-data/models/keyword_spotting/plots_qat',
       help="""\
       Directory where plots of accuracy vs Epochs are stored
       """)
