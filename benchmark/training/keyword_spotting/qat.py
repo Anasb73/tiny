@@ -45,7 +45,15 @@ if __name__ == '__main__':
 
   model = quantize(model)
   print("model summary after quantization")
-  model.summary()   
+  model.summary()
+  model.compile(
+    #optimizer=keras.optimizers.RMSprop(learning_rate=args.learning_rate),  # Optimizer
+    optimizer=keras.optimizers.Adam(learning_rate=Flags.learning_rate),  # Optimizer
+    # Loss function to minimize
+    loss=keras.losses.SparseCategoricalCrossentropy(),
+    # List of metrics to monitor
+    metrics=[keras.metrics.SparseCategoricalAccuracy()],
+  )   
   callbacks = kws_util.get_callbacks(args=Flags)
   train_hist = model.fit(ds_train, validation_data=ds_val, epochs=Flags.epochs, callbacks=callbacks)
   kws_util.plot_training(Flags.plot_dir,train_hist)
