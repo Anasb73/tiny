@@ -165,7 +165,7 @@ def parse_command():
       '--plot_dir',
       type=str,
       #default='./plots',
-      defaults='/work1/gitlab-runner-docker-data/models/keyword_spotting/plots',
+      default='/work1/gitlab-runner-docker-data/models/keyword_spotting/plots',
       help="""\
       Directory where plots of accuracy vs Epochs are stored
       """)
