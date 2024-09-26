@@ -146,13 +146,13 @@ def parse_command():
       '--model_init_path',
       type=str,
       #default=None,
-      #default="/work1/gitlab-runner-docker-data/models/keyword_spotting/trained_models/kws_model.h5",
+      default="/work1/gitlab-runner-docker-data/models/keyword_spotting/trained_models/kws_model.h5",
       #default="/work1/gitlab-runner-docker-data/models/kws_ref_model",
-      default="/work1/gitlab-runner-docker-data/models/keyword_spotting/trained_models/kws_model_quantized",
+      #default="/work1/gitlab-runner-docker-data/models/keyword_spotting/trained_models/kws_model_quantized",
       help='Path to load pretrained model for evaluation or starting point for training')
   parser.add_argument(
       '--tfl_file_name',
-      default='trained_models/kws_model.tflite',
+      default='/work1/gitlab-runner-docker-data/models/keyword_spotting/trained_models/trained_models/kws_model.tflite',
       help='File name to which the TF Lite model will be saved (quantize.py) or loaded (eval_quantized_model)')
   parser.add_argument(
       '--learning_rate',
