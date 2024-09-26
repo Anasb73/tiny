@@ -40,10 +40,13 @@ if __name__ == '__main__':
   outputs = np.zeros((0,num_classes))
   labels = np.array([])
   for samples, batch_labels in ds_test:
+    print("samples:", samples)
+    print("batch_labels:", batch_labels)
     outputs = np.vstack((outputs, model.predict(samples)))
     labels = np.hstack((labels, batch_labels))
 
   predictions = np.argmax(outputs, axis=1)
+  print("predictions:", predictions)
   print("==== EEMBC calculate_accuracy Method ====")
   accuracy_eembc = eembc_ev.calculate_accuracy(outputs, labels)
   print(40*"=")
