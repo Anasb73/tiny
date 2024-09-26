@@ -16,13 +16,14 @@ def run_gemini(gemini_path, model_path, sample_path, output_file="/work1/gitlab-
     # Construct the command with the full path to the gemini executable
     cmd = [gemini_path, model_path, sample_path]
 
-    # Run the command
-    subprocess.run(cmd)
+    # Run the command, suppressing stdout and stderr
+    subprocess.run(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
     # Read predictions from the output file (output_gemini.txt)
     with open(output_file, 'r') as f:
         predictions = [int(line.strip()) for line in f.readlines()]
-
+        print("predictions:", predictions)
+    
     return predictions
 
 def save_sample_with_shape(sample, sample_path):
