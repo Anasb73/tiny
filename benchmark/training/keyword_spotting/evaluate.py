@@ -30,6 +30,14 @@ if __name__ == '__main__':
   else:
     print(f"Starting with pre-trained model from {Flags.model_init_path}")
     model = keras.models.load_model(Flags.model_init_path)
+    model.compile(
+      #optimizer=keras.optimizers.RMSprop(learning_rate=args.learning_rate),  # Optimizer
+      optimizer=keras.optimizers.Adam(learning_rate=Flags.learning_rate),  # Optimizer
+      # Loss function to minimize
+      loss=keras.losses.SparseCategoricalCrossentropy(),
+      # List of metrics to monitor
+      metrics=[keras.metrics.SparseCategoricalAccuracy()],
+    )   
 
     model.summary()
   
