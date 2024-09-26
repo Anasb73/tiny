@@ -57,7 +57,7 @@ if __name__ == '__main__':
   callbacks = kws_util.get_callbacks(args=Flags)
   train_hist = model.fit(ds_train, validation_data=ds_val, epochs=Flags.epochs, callbacks=callbacks)
   kws_util.plot_training(Flags.plot_dir,train_hist)
-  model.save(Flags.saved_model_path)
+  model.save(Flags.saved_model_path, include_optimizer=False, save_format='tf', signatures=None)
   
   if Flags.run_test_set:
     test_scores = model.evaluate(ds_test)
