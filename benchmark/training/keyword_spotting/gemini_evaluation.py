@@ -28,11 +28,13 @@ def run_gemini(gemini_path, model_path, sample_path, output_file="/work1/abenall
 def save_sample_with_shape(sample, sample_path):
 
     shape = sample.shape
-    print(sample.shape)
+    directory = os.path.dirname(sample_path)
+    if not os.path.exists(directory):
+        os.makedirs(directory)
     with open(sample_path, 'w') as f:
-        f.write(f"{shape[0]} {shape[1]} {shape[2]}\n")
+        f.write(f"{shape[1]} {shape[0]} {shape[2]}\n")
 
-        np.savetxt(f, sample.reshape(-1, shape[1]), fmt="%i", delimiter=' ')
+        np.savetxt(f, sample.reshape(-1, shape[0]), fmt="%i", delimiter=' ')
 
 if __name__ == '__main__':
     Flags, unparsed = kws_util.parse_command()
