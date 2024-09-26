@@ -16,6 +16,9 @@ if __name__ == '__main__':
   
   fp32_tfl_file_name = Flags.tfl_file_name[:Flags.tfl_file_name.rfind('.')] + '_float32.tflite'
   tflite_float_model = converter.convert()
+  output_dir = os.path.dirname(fp32_tfl_file_name)
+  if not os.path.exists(output_dir):
+    os.makedirs(output_dir)
   with open(fp32_tfl_file_name, "wb") as fpo:
     num_bytes_written = fpo.write(tflite_float_model)
   print(f"Wrote {num_bytes_written} / {len(tflite_float_model)} bytes to tflite file")
