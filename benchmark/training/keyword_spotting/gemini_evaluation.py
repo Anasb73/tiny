@@ -9,7 +9,7 @@ import eval_functions_eembc as eembc_ev
 
 num_classes = 12  # Modify as necessary
 
-def run_gemini(gemini_path, model_path, sample_path, output_file="/work1/abenalla/ATHENAP18/FROM_ST_TO_ASYGN/tensorflow_gemini/geminipyc128PE/gmn_out/output_gemini.txt"):
+def run_gemini(gemini_path, model_path, sample_path, output_file="/work1/gitlab-runner-docker-data/ATHENAP18/FROM_ST_TO_ASYGN/tensorflow_gemini/geminipyc128PE/gmn_out/output_gemini.txt"):
     """
     Run the gemini executable with the given model and sample, and read the output.
     """
@@ -44,10 +44,10 @@ if __name__ == '__main__':
     ds_train, ds_test, ds_val = kws_data.get_training_data(Flags)
     print("Done getting data")
 
-    gemini_path = '/work1/abenalla/ATHENAP18/FROM_ST_TO_ASYGN/tensorflow_gemini/geminipyc128PE/gemini'
+    gemini_path = '/work1/gitlab-runner-docker-data/ATHENAP18/FROM_ST_TO_ASYGN/tensorflow_gemini/geminipyc128PE/gemini'
 
-    model_path = '/work1/abenalla/ATHENAP18/FROM_ST_TO_ASYGN/tensorflow_gemini/geminipyc128PE/txt/model_unknown.txt'
-    sample_path = '/work1/abenalla/ATHENAP18/FROM_ST_TO_ASYGN/tensorflow_gemini/geminipyc128PE/txt/kws.txt'
+    model_path = '/work1/gitlab-runner-docker-data/ATHENAP18/FROM_ST_TO_ASYGN/tensorflow_gemini/geminipyc128PE/txt/model_unknown.txt'
+    sample_path = '/work1/gitlab-runner-docker-data/ATHENAP18/FROM_ST_TO_ASYGN/tensorflow_gemini/geminipyc128PE/txt/kws.txt'
     
     all_predictions = []
     all_labels = []
