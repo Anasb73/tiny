@@ -15,9 +15,11 @@ def run_gemini(gemini_path, model_path, sample_path, output_file="/work1/gitlab-
     """
     # Construct the command with the full path to the gemini executable
     cmd = [gemini_path, model_path, sample_path]
-
-    # Run the command, suppressing stdout and stderr
-    subprocess.run(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    
+    log_file = "/work1/gitlab-runner-docker-data/ATHENAP18/FROM_ST_TO_ASYGN/tensorflow_gemini/geminipyc128PE/log.txt"
+    with open(log_file, 'w') as log:
+        # Run the command, writing stdout and stderr to the log file
+        subprocess.run(cmd, stdout=log, stderr=subprocess.STDOUT)
 
     # Read predictions from the output file (output_gemini.txt)
     with open(output_file, 'r') as f:
