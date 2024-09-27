@@ -9,7 +9,7 @@ from tensorflow import keras
 import keras_model as models
 import get_dataset as kws_data
 import kws_util
-from custom_quantization import quantize
+from custom_quantization import apply_quantization_aware_training
 
 num_classes = 12 # should probably draw this directly from the dataset.
 # FLAGS = None
@@ -43,7 +43,7 @@ if __name__ == '__main__':
   print("model summary bedore quantization")
   model.summary()
 
-  model = quantize(model)
+  model = apply_quantization_aware_training(model)
   print("model summary after quantization")
   model.summary()
   model.compile(
