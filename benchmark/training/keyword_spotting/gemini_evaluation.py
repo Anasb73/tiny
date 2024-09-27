@@ -9,26 +9,60 @@ import eval_functions_eembc as eembc_ev
 
 num_classes = 12  # Modify as necessary
 
+# def run_gemini(gemini_path, model_path, sample_path, output_file="/work1/gitlab-runner-docker-data/ATHENAP18/FROM_ST_TO_ASYGN/tensorflow_gemini/geminipyc128PE/gmn_out/output_gemini.txt"):
+#     """
+#     Run the gemini executable with the given model and sample, and read the output.
+#     """
+#     # Construct the command with the full path to the gemini executable
+#     cmd = [gemini_path, model_path, sample_path]
+#     log_file = "/work1/gitlab-runner-docker-data/ATHENAP18/FROM_ST_TO_ASYGN/tensorflow_gemini/geminipyc128PE/log.txt"
+
+#     with open(log_file, 'w') as log:
+#         # Run the command, writing stdout and stderr to the log file
+#         #subprocess.run(cmd, stdout=log, stderr=log)
+#         subprocess.run(cmd)
+
+
+#     directory = os.path.dirname(output_file)
+#     if not os.path.exists(directory):
+#         os.makedirs(directory)
+#     with open(output_file, 'r') as f:
+#         predictions = [int(line.strip()) for line in f.readlines()]
+#         print("predictions:", predictions)
+    
+#     return predictions
+
+
+
 def run_gemini(gemini_path, model_path, sample_path, output_file="/work1/gitlab-runner-docker-data/ATHENAP18/FROM_ST_TO_ASYGN/tensorflow_gemini/geminipyc128PE/gmn_out/output_gemini.txt"):
     """
     Run the gemini executable with the given model and sample, and read the output.
     """
-    # Construct the command with the full path to the gemini executable
+    gemini_dir = os.path.dirname(gemini_path)
+    
     cmd = [gemini_path, model_path, sample_path]
+    
     log_file = "/work1/gitlab-runner-docker-data/ATHENAP18/FROM_ST_TO_ASYGN/tensorflow_gemini/geminipyc128PE/log.txt"
 
-    with open(log_file, 'w') as log:
-        # Run the command, writing stdout and stderr to the log file
-        subprocess.run(cmd, stdout=log)
-
+    original_dir = os.getcwd()
+    
+    try:
+        os.chdir(gemini_dir)
+        
+        with open(log_file, 'w') as log:
+            subprocess.run(cmd, stdout=log, stderr=log)
+        
+    finally:
+        os.chdir(original_dir)
 
     directory = os.path.dirname(output_file)
     if not os.path.exists(directory):
         os.makedirs(directory)
+
     with open(output_file, 'r') as f:
         predictions = [int(line.strip()) for line in f.readlines()]
         print("predictions:", predictions)
-    
+
     return predictions
 
 def save_sample_with_shape(sample, sample_path):
