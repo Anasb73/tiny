@@ -55,8 +55,9 @@ if __name__ == '__main__':
     model_path = '/work1/gitlab-runner-docker-data/ATHENAP18/FROM_ST_TO_ASYGN/tensorflow_gemini/geminipyc128PE/txt/model_unknown.txt'
     sample_path = '/work1/gitlab-runner-docker-data/ATHENAP18/FROM_ST_TO_ASYGN/tensorflow_gemini/geminipyc128PE/txt/kws.txt'
     
-    outputs = np.zeros((0,num_classes))
-    labels = np.array([])
+
+    all_predictions = []
+    all_labels = []
 
     for i, (samples, batch_labels) in enumerate(ds_test):
         for j, sample in enumerate(samples):
