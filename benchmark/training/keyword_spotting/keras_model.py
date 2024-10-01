@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 from tensorflow.keras.models import Model
-from tensorflow.keras.layers import Input, Dense, Activation, Flatten, BatchNormalization, Dropout, Reshape, 
+from tensorflow.keras.layers import Input, Dense, Activation, Flatten, BatchNormalization, Dropout, Reshape
 from tensorflow.keras.layers import Conv2D, DepthwiseConv2D, AveragePooling2D, GlobalAveragePooling2D, MaxPool2D
 from tensorflow.keras.regularizers import l2
 
