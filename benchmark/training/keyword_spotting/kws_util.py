@@ -140,15 +140,16 @@ def parse_command():
       '--saved_model_path',
       type=str,
       #default='trained_models/kws_model.h5',
-      default='/work1/gitlab-runner-docker-data/models/keyword_spotting/trained_models/kws_model_quantized_27',
+      default='/work1/gitlab-runner-docker-data/models/keyword_spotting/trained_models/kws_model_quantized_30',
       #default = "/work1/gitlab-runner-docker-data/models/kws_ref_model",
       help='In quantize.py, path to load pretrained model from; in train.py, destination for trained model')
   parser.add_argument(
       '--model_init_path',
       type=str,
-      #default=None,
+      default=None,
       #default="/work1/gitlab-runner-docker-data/models/keyword_spotting/trained_models/kws_model.h5",
-      default="/work1/gitlab-runner-docker-data/models/kws_ref_model",
+      #default="/work1/gitlab-runner-docker-data/models/kws_ref_model",
+      #default="/work1/gitlab-runner-docker-data/models/keyword_spotting/trained_models/kws_model_quantized_27",
       #default="/work1/gitlab-runner-docker-data/models/keyword_spotting/trained_models/kws_model_quantized",
       help='Path to load pretrained model for evaluation or starting point for training')
   parser.add_argument(

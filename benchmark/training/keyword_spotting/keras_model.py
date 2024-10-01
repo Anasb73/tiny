@@ -10,8 +10,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 from tensorflow.keras.models import Model
-from tensorflow.keras.layers import Input, Dense, Activation, Flatten, BatchNormalization, Dropout, Reshape
-from tensorflow.keras.layers import Conv2D, DepthwiseConv2D, AveragePooling2D, GlobalAveragePooling2D
+from tensorflow.keras.layers import Input, Dense, Activation, Flatten, BatchNormalization, Dropout, Reshape, 
+from tensorflow.keras.layers import Conv2D, DepthwiseConv2D, AveragePooling2D, GlobalAveragePooling2D, MaxPool2D
 from tensorflow.keras.regularizers import l2
 
 def prepare_model_settings(label_count, args):
@@ -133,7 +133,8 @@ def get_model(args):
     # Reduce size and apply final softmax
     x = Dropout(rate=0.4)(x)
 
-    x = AveragePooling2D(pool_size=final_pool_size)(x)
+    #x = AveragePooling2D(pool_size=final_pool_size)(x)
+    x = MaxPool2D(pool_size=final_pool_size)(x)
     x = Flatten()(x)
     outputs = Dense(model_settings['label_count'], activation='softmax')(x)
 
