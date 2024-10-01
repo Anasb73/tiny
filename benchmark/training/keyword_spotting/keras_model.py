@@ -134,8 +134,10 @@ def get_model(args):
     x = Dropout(rate=0.4)(x)
 
     #x = AveragePooling2D(pool_size=final_pool_size)(x)
-    x = AveragePooling2D(pool_size=(5,5))(x)
-    x = AveragePooling2D(pool_size=(5,1))(x)
+    #x = AveragePooling2D(pool_size=(5,5))(x)
+    #x = AveragePooling2D(pool_size=(5,1))(x)
+    x = MaxPool2D(pool_size=(5,5))(x)
+    x = MaxPool2D(pool_size=(5,1))(x)
     x = Flatten()(x)
     outputs = Dense(model_settings['label_count'], activation='softmax')(x)
 
