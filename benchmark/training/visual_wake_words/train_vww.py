@@ -11,7 +11,7 @@ import os
 
 from absl import app
 from vww_model import mobilenet_v1
-from custom_quantization 
+import custom_quantization 
 
 import tensorflow as tf
 assert tf.__version__.startswith('2')
