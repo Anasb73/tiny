@@ -11,6 +11,7 @@ import os
 
 from absl import app
 from vww_model import mobilenet_v1
+from custom_quantization import apply_quantization_aware_training
 
 import tensorflow as tf
 assert tf.__version__.startswith('2')
@@ -19,8 +20,9 @@ IMAGE_SIZE = 96
 BATCH_SIZE = 32
 EPOCHS = 20
 
-BASE_DIR = os.path.join(os.getcwd(), 'vw_coco2014_96')
+#BASE_DIR = os.path.join(os.getcwd(), 'vw_coco2014_96')
 
+BASE_DIR = "/work1/gitlab-runner-docker-data/datasets/vw_coco2014_96"
 
 def main(argv):
   if len(argv) >= 2:
@@ -60,11 +62,18 @@ def main(argv):
   model = train_epochs(model, train_generator, val_generator, 20, 0.00025)
 
   # Save model HDF5
-  if len(argv) >= 3:
-    model.save(argv[2])
-  else:
-    model.save('trained_models/vww_96.h5')
+  # if len(argv) >= 3:
+  #   model.save(argv[2])
+  # else:
+  model.save('/work1/gitlab-runner-docker-data/models/vww/trained_models/vww')
+  
+  model_quantized = apply_quantization_aware_training(model)
 
+  model_quantized = train_epochs(model_quantized, train_generator, val_generator, 20, 0.001)
+  model_quantized  = train_epochs(model_quantized, train_generator, val_generator, 10, 0.0005)
+  model_quantized  = train_epochs(model_quantized, train_generator, val_generator, 20, 0.00025)
+
+  model_quantized.save('/work1/gitlab-runner-docker-data/models/vww/trained_models/vww_quantized')
 
 def train_epochs(model, train_generator, val_generator, epoch_count,
                  learning_rate):
@@ -79,6 +88,8 @@ def train_epochs(model, train_generator, val_generator, epoch_count,
       validation_data=val_generator,
       validation_steps=len(val_generator),
       batch_size=BATCH_SIZE)
+  
+  
   return model
 
 
