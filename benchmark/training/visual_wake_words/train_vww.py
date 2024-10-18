@@ -11,7 +11,7 @@ import os
 
 from absl import app
 from vww_model import mobilenet_v1
-from custom_quantization import apply_quantization_aware_training
+from custom_quantization 
 
 import tensorflow as tf
 assert tf.__version__.startswith('2')
@@ -65,15 +65,16 @@ def main(argv):
   # if len(argv) >= 3:
   #   model.save(argv[2])
   # else:
-  model.save('/work1/gitlab-runner-docker-data/models/vww/trained_models/vww')
+  model.save('/work1/gitlab-runner-docker-data/models/vww/trained_models/vww_18')
   
-  model_quantized = apply_quantization_aware_training(model)
+  #model_quantized = apply_quantization_aware_training(model)
+  model_quantized = custom_quantization.quantize(model)
 
   model_quantized = train_epochs(model_quantized, train_generator, val_generator, 20, 0.001)
   model_quantized  = train_epochs(model_quantized, train_generator, val_generator, 10, 0.0005)
   model_quantized  = train_epochs(model_quantized, train_generator, val_generator, 20, 0.00025)
 
-  model_quantized.save('/work1/gitlab-runner-docker-data/models/vww/trained_models/vww_quantized')
+  model_quantized.save('/work1/gitlab-runner-docker-data/models/vww/trained_models/vww18_quantized')
 
 def train_epochs(model, train_generator, val_generator, epoch_count,
                  learning_rate):
