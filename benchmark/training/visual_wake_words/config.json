@@ -1,5 +1,5 @@
 {
-    "DATASET_PATH"      : "/nfs/work/board/DATASETS/VWW_TINYML/",
+    "DATASET_PATH"      : "/work1/gitlab-runner-docker-data/datasets/VWW_TINYML",
     "INPUT_TYPE"        : "image",
     "INPUT_SHAPE"       : [96,96,3],
     "INPUT_SCALING"     : 255,
