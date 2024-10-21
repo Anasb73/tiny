@@ -7,45 +7,22 @@ created and trained, and can be used as a starting point for open submissions
 using re-training.
 """
 
-import os, sys, json
+import os
 
 from absl import app
 from vww_model import mobilenet_v1
+import custom_quantization 
 
 import tensorflow as tf
 assert tf.__version__.startswith('2')
-from tensorflow.keras.callbacks import ModelCheckpoint
-
-import nn_train_utils
-from nn_train_utils import DataGenWrapper
-import custom_quantization
-
 
 IMAGE_SIZE = 96
 BATCH_SIZE = 32
-EPOCHS = 2
+EPOCHS = 20
 
+#BASE_DIR = os.path.join(os.getcwd(), 'vw_coco2014_96')
 
-with open('config.json', 'r') as f:
-  config = json.load(f)
-
-def train_epochs(model, train_generator, val_generator, epoch_count,
-                 learning_rate, callbacks):
-  model.compile(
-      optimizer=tf.keras.optimizers.Adam(learning_rate=0.001),
-      loss='categorical_crossentropy',
-      metrics=['accuracy'])
-  history_fine = model.fit(
-      train_generator,
-      steps_per_epoch=len(train_generator),
-      epochs=epoch_count,
-      validation_data=val_generator,
-      validation_steps=len(val_generator),
-      batch_size=BATCH_SIZE,
-      callbacks=callbacks,
-      verbose=1)
-  return model
-
+BASE_DIR = "/work1/gitlab-runner-docker-data/datasets/vw_coco2014_96"
 
 def main(argv):
   if len(argv) >= 2:
@@ -55,74 +32,66 @@ def main(argv):
 
   model.summary()
 
-
-  train_x_paths, train_y, valid_x_paths, valid_y =  \
-    nn_train_utils.read_train_dataset(config['NB_OUTPUT'],
-                                      config['DATASET_PATH'],
-                                      config['VALIDATION_SPLIT'],
-                                      config['MAX_DSET_INPUTS'])
-
-  train_generator = DataGenWrapper(train_x_paths,
-                                   train_y,
-                                   x_type=config['INPUT_TYPE'],
-                                   input_shape=config['INPUT_SHAPE'],
-                                   input_scaling=config['INPUT_SCALING'],
-                                   batch_size=config['BATCH_SIZE'],
-                                   standardize=config['STD_INPUTS'],
-                                   augmentation=config['AUGMENTATION'],
-                                   shuffle=True)
-
-  valid_generator = DataGenWrapper(valid_x_paths,
-                                   valid_y,
-                                   x_type=config['INPUT_TYPE'],
-                                   input_shape=config['INPUT_SHAPE'],
-                                   input_scaling=config['INPUT_SCALING'],
-                                   batch_size=config['BATCH_SIZE'],
-                                   standardize=config['STD_INPUTS'],
-                                   augmentation=config['AUGMENTATION'],
-                                   shuffle=False)
-
-  
-
-  ## Train with checkpoint (keep best model)
-  model_name = "/work1/gitlab-runner-docker-data/models/vww/"  + config['OUTPUT_MODEL_NAME']
-  checkpoint = ModelCheckpoint(model_name, monitor='val_loss', verbose=0, save_best_only=True, mode='auto')
-  callbacks_list = [checkpoint]
-          
-  model = train_epochs(model, train_generator, valid_generator, 20, 0.001, callbacks_list)
-  model = train_epochs(model, train_generator, valid_generator, 10, 0.0005, callbacks_list)
-  model = train_epochs(model, train_generator, valid_generator, 20, 0.00025, callbacks_list)
-
+  batch_size = 50
   validation_split = 0.1
 
+  datagen = tf.keras.preprocessing.image.ImageDataGenerator(
+      rotation_range=10,
+      width_shift_range=0.05,
+      height_shift_range=0.05,
+      zoom_range=.1,
+      horizontal_flip=True,
+      validation_split=validation_split,
+      rescale=1. / 255)
+  train_generator = datagen.flow_from_directory(
+      BASE_DIR,
+      target_size=(IMAGE_SIZE, IMAGE_SIZE),
+      batch_size=BATCH_SIZE,
+      subset='training',
+      color_mode='rgb')
+  val_generator = datagen.flow_from_directory(
+      BASE_DIR,
+      target_size=(IMAGE_SIZE, IMAGE_SIZE),
+      batch_size=BATCH_SIZE,
+      subset='validation',
+      color_mode='rgb')
+  print(train_generator.class_indices)
 
+  model = train_epochs(model, train_generator, val_generator, 20, 0.001)
+  model = train_epochs(model, train_generator, val_generator, 10, 0.0005)
+  model = train_epochs(model, train_generator, val_generator, 20, 0.00025)
 
-  ## Quantize and QAT training
-  qat_model = custom_quantization.quantize(model)
-  qat_model.compile(
-      optimizer=tf.keras.optimizers.Adam(learning_rate=0.001),
+  # Save model HDF5
+  # if len(argv) >= 3:
+  #   model.save(argv[2])
+  # else:
+  model.save('/work1/gitlab-runner-docker-data/models/vww/trained_models/vww')
+  
+  #model_quantized = apply_quantization_aware_training(model)
+  model_quantized = custom_quantization.quantize(model)
+
+  model_quantized = train_epochs(model_quantized, train_generator, val_generator, 20, 0.001)
+  model_quantized  = train_epochs(model_quantized, train_generator, val_generator, 10, 0.0005)
+  model_quantized  = train_epochs(model_quantized, train_generator, val_generator, 20, 0.00025)
+
+  model_quantized.save('/work1/gitlab-runner-docker-data/models/vww/trained_models/vww_quantized')
+
+def train_epochs(model, train_generator, val_generator, epoch_count,
+                 learning_rate):
+  model.compile(
+      optimizer=tf.keras.optimizers.Adam(learning_rate),
       loss='categorical_crossentropy',
       metrics=['accuracy'])
+  history_fine = model.fit(
+      train_generator,
+      steps_per_epoch=len(train_generator),
+      epochs=epoch_count,
+      validation_data=val_generator,
+      validation_steps=len(val_generator),
+      batch_size=BATCH_SIZE)
   
-
-  print("Running Quantization-aware training")
-  print("***********************************")
-
-  model_name = "/work1/gitlab-runner-docker-data/models/vww/"  + config['QAT_MODEL_NAME']
-  checkpoint = ModelCheckpoint(model_name, monitor='val_loss', verbose=0, save_best_only=True, mode='auto')
-  callbacks_list = [checkpoint]
-
-  history = qat_model.fit(x=train_generator,
-                          validation_data=valid_generator,
-                          epochs=config['N_RETRAIN_EPOCHS'],
-                          verbose=1,
-                          callbacks=callbacks_list)
-
-  qat_model = train_epochs(qat_model, train_generator, valid_generator, 20, 0.001, callbacks_list)
-  qat_model = train_epochs(qat_model, train_generator, valid_generator, 10, 0.0005, callbacks_list)
-  qat_model= train_epochs(qat_model, train_generator, valid_generator, 20, 0.00025, callbacks_list)
-
-  qat_model.summary()
+  
+  return model
 
 
 if __name__ == '__main__':
