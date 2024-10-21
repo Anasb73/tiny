@@ -1,0 +1,19 @@
+{
+    "DATASET_PATH"      : "/nfs/work/board/DATASETS/VWW_TINYML/",
+    "INPUT_TYPE"        : "image",
+    "INPUT_SHAPE"       : [96,96,3],
+    "INPUT_SCALING"     : 255,
+    "NB_OUTPUT"         : 2,
+    "STD_INPUTS"        : true,
+    "AUGMENTATION"      : true,
+    "MAX_DSET_INPUTS"   : 10000,
+    "N_TRAIN_EPOCHS"    : 2,
+    "N_RETRAIN_EPOCHS"  : 2,
+    "WEIGHT_DECAY"      : 1e-5,
+    "DROPOUT_RATE"      : 0.05,
+    "LEARNING_RATE"     : 5e-4,
+    "BATCH_SIZE"        : 32,
+    "VALIDATION_SPLIT"  : 0.1,
+    "OUTPUT_MODEL_NAME" : "trained_model",
+    "QAT_MODEL_NAME"    : "trained_model_qat"
+}
